@@ -36,6 +36,6 @@ phases:
 
 artifacts:
   # Tell CodeBuild to look inside the subfolder for the output files
-  base-directory: swiggyclone
+  base-directory: Swiggy_clone
   files:
     - appspec.yaml
