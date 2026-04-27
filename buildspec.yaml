@@ -20,13 +20,12 @@ phases:
 
   build:
     commands:
+      # Navigate into the subfolder before doing anything else!
+      - cd swiggyclone
       - echo "Running tests..."
       - echo "Building Docker image..."
-      # Log into the Docker registry using Parameter Store credentials
       - 'echo "$DOCKER_REGISTRY_PASSWORD" | docker login -u "$DOCKER_REGISTRY_USERNAME" --password-stdin "$DOCKER_REGISTRY_URL"'
-      # Build the Docker image
       - 'docker build -t "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/swiggy:latest" .'
-      # Push the image to your registry
       - 'docker push "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/swiggy:latest"'
 
   post_build:
@@ -36,5 +35,7 @@ phases:
       - 'aws ses send-email --from "vermaabhay085@gmail.com" --to "vermaabhay085@gmail.com" --subject "CodeBuild Status: $CODEBUILD_BUILD_ID" --text "Build status: $CODEBUILD_BUILD_STATUS" --region "ap-south-1"'
 
 artifacts:
+  # Tell CodeBuild to look inside the subfolder for the output files
+  base-directory: swiggyclone
   files:
     - appspec.yaml
